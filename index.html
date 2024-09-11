@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محادثة جماعية</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        #chat-container {
+            width: 80%;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+        }
+        #messages {
+            height: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            overflow-y: scroll;
+            margin-bottom: 20px;
+            background-color: #fafafa;
+        }
+        .message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .message p {
+            margin: 5px 0;
+        }
+        #user-input {
+            display: flex;
+            justify-content: space-between;
+        }
+        input[type="text"], button {
+            padding: 10px;
+            font-size: 16px;
+        }
+        input[type="text"] {
+            width: 80%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            width: 18%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="chat-container">
+        <h2>محادثة جماعية</h2>
+        <div id="messages">
+            <!-- الرسائل ستظهر هنا -->
+        </div>
+
+        <div id="user-input">
+            <input type="text" id="username" placeholder="أدخل اسمك">
+            <input type="text" id="message" placeholder="أدخل رسالتك">
+            <button onclick="sendMessage()">إرسال</button>
+        </div>
+    </div>
+
+    <script>
+        // تعريف العناصر
+        const messagesDiv = document.getElementById('messages');
+        const usernameInput = document.getElementById('username');
+        const messageInput = document.getElementById('message');
+
+        // إرسال الرسالة
+        function sendMessage() {
+            const username = usernameInput.value.trim();
+            const message = messageInput.value.trim();
+
+            if (username === "" || message === "") {
+                alert("يرجى ملء اسم المستخدم والرسالة");
+                return;
+            }
+
+            // إنشاء رسالة جديدة
+            const newMessage = document.createElement('div');
+            newMessage.classList.add('message');
+            newMessage.innerHTML = `<strong>${username}:</strong> <p>${message}</p>`;
+
+            // إضافة الرسالة إلى قائمة الرسائل
+            messagesDiv.appendChild(newMessage);
+
+            // تفريغ الحقول بعد الإرسال
+            messageInput.value = "";
+            messageInput.focus();
+
+            // التمرير إلى آخر رسالة
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+    </script>
+
+</body>
+</html>
