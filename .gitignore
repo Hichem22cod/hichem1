@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر نشر التطبيقات</title>
+    <style>
+        /* تصميم أساسي */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        #site {
+            width: 80%;
+            margin: 20px auto;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        #search {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        #apps {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .app {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            width: 250px;
+            text-align: center;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .app img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        .app h3 {
+            margin: 10px 0;
+        }
+        .app p {
+            color: #555;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input[type="text"], textarea, input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+        }
+        button[type="submit"] {
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="site">
+        <h1>{Hichem/Lamdar}
+متجر نشر التطبيقات</h1>
+        <input type="text" id="search" placeholder="ابحث عن تطبيقات...">
+        <div id="apps">
+            <!-- التطبيقات ستضاف هنا ديناميكياً بواسطة JavaScript -->
+        </div>
+        
+        <h2>نشر تطبيق جديد</h2>
+        <form id="upload-form">
+            <label for="app-name">اسم التطبيق:</label>
+            <input type="text" id="app-name" required>
+            
+            <label for="app-description">وصف التطبيق:</label>
+            <textarea id="app-description" rows="4" required></textarea>
+            
+            <label for="app-image">صورة التطبيق:</label>
+            <input type="file" id="app-image" accept="image/*" required>
+            
+            <label for="app-apk">ملف APK:</label>
+            <input type="file" id="app-apk" accept=".apk" required>
+            
+            <button type="submit">نشر التطبيق</button>
+        </form>
+    </div>
+
+    <script>
+        // قائمة التطبيقات (يمكنك تعديلها أو استيرادها من ملف خارجي)
+        let apps = [
+            { id: 1, name: 'تطبيق 1', description: 'وصف تطبيق 1', apkLink: 'app1.apk', image: 'app1.jpg' },
+            { id: 2, name: 'تطبيق 2', description: 'وصف تطبيق 2', apkLink: 'app2.apk', image: 'app2.jpg' },
+            { id: 3, name: 'تطبيق 3', description: 'وصف تطبيق 3', apkLink: 'app3.apk', image: 'app3.jpg' }
+        ];
+
+        // دالة لعرض التطبيقات في الصفحة
+        function displayApps(filteredApps = apps) {
+            const appsContainer = document.getElementById('apps');
+            appsContainer.innerHTML = '';
+            filteredApps.forEach(app => {
+                const appDiv = document.createElement('div');
+                appDiv.classList.add('app');
+                appDiv.innerHTML = `
+                    <img src="${app.image}" alt="${app.name}">
+                    <h3>${app.name}</h3>
+                    <p>${app.description}</p>
+                    <a href="${app.apkLink}" download class="btn">تحميل APK</a>
+                `;
+                appsContainer.appendChild(appDiv);
+            });
+        }
+
+        // دالة لتصفية التطبيقات
+        function filterApps() {
+            const searchQuery = document.getElementById('search').value.toLowerCase();
+            const filteredApps = apps.filter(app => app.name.toLowerCase().includes(searchQuery));
+            displayApps(filteredApps);
+        }
+
+        // دالة لمعالجة رفع التطبيقات
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('app-name').value;
+            const description = document.getElementById('app-description').value;
+            const imageFile = document.getElementById('app-image').files[0];
+            const apkFile = document.getElementById('app-apk').files[0];
+
+            if (!imageFile || !apkFile) {
+                alert('يرجى تحميل صورة التطبيق وملف APK.');
+                return;
+            }
+
+            // إنشاء روابط وهمية للملفات
+            const imageLink = URL.createObjectURL(imageFile);
+            const apkLink = URL.createObjectURL(apkFile);
+
+            // إضافة التطبيق إلى القائمة
+            const newApp = {
+                id: apps.length + 1,
+                name: name,
+                description: description,
+                apkLink: apkLink,
+                image: imageLink
+            };
+
+            apps.push(newApp);
+            displayApps();
+
+            // إعادة تعيين النموذج
+            document.getElementById('upload-form').reset();
+        }
+
+        // عرض التطبيقات عند تحميل الصفحة
+        window.onload = () => {
+            displayApps();
+            document.getElementById('search').addEventListener('input', filterApps);
+            document.getElementById('upload-form').addEventListener('submit', handleFormSubmit);
+        };
+    </script>
+</body>
+</html>
